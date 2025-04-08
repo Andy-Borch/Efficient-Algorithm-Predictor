@@ -17,26 +17,39 @@ def bubble_sort(data):
     return data
 
 def insertion_sort(data):
-    pass
+    if isinstance(data, tuple) or isinstance(data, set):
+        data = list(data)
+    return data
 
 def merge_sort(data):
-    pass
+    if isinstance(data, tuple) or isinstance(data, set):
+        data = list(data)
+    return data
 
 def quick_sort(data):
-    pass
+    if isinstance(data, tuple) or isinstance(data, set):
+        data = list(data)
+    return data
 
 def heap_sort(data):
-    pass
+    if isinstance(data, tuple) or isinstance(data, set):
+        data = list(data)
+    return data
 
 def radix_sort(data):
-    pass
+    if isinstance(data, tuple) or isinstance(data, set):
+        data = list(data)
+    return data
 
 def bucket_sort(data):
-    pass
+    if isinstance(data, tuple) or isinstance(data, set):
+        data = list(data)
+    return data
 
-def sort_data():
+def bubble_sort_data():
     #This data will eventually come from the csv file, this is just proof of concept for now
     array = random.sample(range(1, 10000), 1000)
+    #TODO: Make each data structure type have different sizes/content to make more realistic to actual data we will use?
     tupleData = tuple(array)
     npArray = np.array(array)
     listData = list(array)
@@ -47,31 +60,38 @@ def sort_data():
 
     start = time.time()
     bubble_sort(array)
-    timings['Bubble Sort'] = time.time() - start
+    timings['Array'] = time.time() - start
 
     start1 = time.time()
     bubble_sort(tupleData)
-    timings['Tuple bubble'] = time.time() - start1
+    timings['Tuple'] = time.time() - start1
 
     start2 = time.time()
     bubble_sort(npArray)
-    timings['NP array'] = time.time() - start2
+    timings['Numpy Array'] = time.time() - start2
 
     start3 = time.time()
     bubble_sort(listData)
-    timings['list'] = time.time() - start3
+    timings['List'] = time.time() - start3
 
     start4 = time.time()
     bubble_sort(pandasSeries)
-    timings['Pandas'] = time.time() - start4
+    timings['Pandas Series'] = time.time() - start4
 
     start5 = time.time()
     bubble_sort(setData)
-    timings['set'] = time.time() - start5
+    timings['Set'] = time.time() - start5
 
     return timings
 
-results = sort_data()
-df = pd.DataFrame(list(results.items()), columns=['Algorithm', 'Time (seconds)'])
+bubble_sort_results = bubble_sort_data()
+df = pd.DataFrame(list(bubble_sort_results.items()), columns=['Data Structure Type', 'Time (seconds)'])
 print("-----THIS IS ONLY FOR BUBBLE SORT AS PROOF OF CONCEPT. WILL EVENTUALLY SORT EACH DATA STRUCTURE TYPE WITH EVERY ALGORITHM-----")
+print("Bubble Sort Results")
+#TODO: Print fastest, then how much slower in % the rest are?
 print(df)
+
+#TODO: Make a for loop that changes data characteristics like length, std, etc and plot time vs certain characteristic? with a
+#  scatterplot. y axis is time, x axis is a feature like length etc, each color dot represents a data structure type
+    #make a scatter plot for each algorithm
+
