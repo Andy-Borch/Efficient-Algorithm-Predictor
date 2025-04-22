@@ -1,180 +1,45 @@
 #Implement various sorting algorithms from the data in the csv
 #Add run time for each algorithm on each peice of data to the csv file
-import time
-import random
-import numpy as np
-import pandas as pd
-import copy
-import matplotlib.pyplot as plt
-import os
-import seaborn as sns
-import csv
 
-lengths = [10, 100, 500]
-deviations = [10, 100, 500]
 
-def merge_sort_helper(arr):
-    if len(arr) <= 1:
-        return arr
-    mid = len(arr) // 2
-    left = merge_sort_helper(arr[:mid])
-    right = merge_sort_helper(arr[mid:])
-    return merge(left, right)
-
-def merge(left, right):
-    result = []
-    i = j = 0
-    while i < len(left) and j < len(right):
-        if left[i] < right[j]:
-            result.append(left[i])
-            i += 1
-        else:
-            result.append(right[j])
-            j += 1
-    result.extend(left[i:])
-    result.extend(right[j:])
-    return result
-
-def quick_sort_helper(arr):
-    if len(arr) <= 1:
-        return arr
-    pivot = arr[len(arr) // 2]
-    left = [x for x in arr if x < pivot]
-    middle = [x for x in arr if x == pivot]
-    right = [x for x in arr if x > pivot]
-    return quick_sort_helper(left) + middle + quick_sort_helper(right)
-
-def heapify(arr, n, i):
-    largest = i
-    left = 2 * i + 1
-    right = 2 * i + 2
-
-    if left < n and arr[largest] < arr[left]:
-        largest = left
-
-    if right < n and arr[largest] < arr[right]:
-        largest = right
-
-    if largest != i:
-        arr[i], arr[largest] = arr[largest], arr[i]
-        heapify(arr, n, largest)
-
-def counting_sort(arr, exp):
-    n = len(arr)
-    output = [0] * n
-    count = [0] * 10
-
-    for i in range(n):
-        index = (arr[i] // exp) % 10
-        count[index] += 1
-
-    for i in range(1, 10):
-        count[i] += count[i - 1]
-
-    i = n - 1
-    while i >= 0:
-        index = (arr[i] // exp) % 10
-        output[count[index] - 1] = arr[i]
-        count[index] -= 1
-        i -= 1
-
-    for i in range(n):
-        arr[i] = output[i:][0]
-
-def bubble_sort(data):
-    if isinstance(data, tuple) or isinstance(data, set):
-        data = list(data)
-
-    n = len(data)
-    for i in range(n):
-        for j in range(0, n - i - 1):
-            if data[j] > data[j + 1]:
-                data[j], data[j + 1] = data[j + 1], data[j]
-    return data
-
-def insertion_sort(data):
-    if isinstance(data, tuple) or isinstance(data, set):
-        data = list(data)
-    for i in range(1, len(data)):
-        key = data[i]
-        j = i - 1
-        while j >= 0 and key < data[j]:
-            data[j + 1] = data[j]
-            j -= 1
-        data[j + 1] = key
-    return data
-
-def merge_sort(data):
-    if isinstance(data, (tuple, set, pd.Series)):
-        data = list(data)
-    return merge_sort_helper(data)
-
-def quick_sort(data):
-    if isinstance(data, tuple) or isinstance(data, set):
-        data = list(data)
-    return quick_sort_helper(data)
-
-def heap_sort(data):
-    if isinstance(data, tuple) or isinstance(data, set):
-        data = list(data)
-    n = len(data)
-    for i in range(n // 2 - 1, -1, -1):
-        heapify(data, n, i)
-
-    for i in range(n - 1, 0, -1):
-        data[0], data[i] = data[i], data[0]
-        heapify(data, i, 0)
-    return data
-
-def radix_sort(data):
-    if isinstance(data, tuple) or isinstance(data, set):
-        data = list(data)
-    if len(data) == 0:
-        return data
-
-    max_num = max(data)
-    exp = 1
-    while max_num // exp > 0:
-        counting_sort(data, exp)
-        exp *= 10
-    return data
-
-def bucket_sort(data):
-    #Must convert np array and pd Series to list because they
-    #dont have clear and extend methods
-    #Thats ok, just another quirk of the data the model will have to predict
-    if isinstance(data, (tuple, set, np.ndarray, pd.Series)):
-        data = list(data)
-    if len(data) == 0:
-        return data
-
-    min_value = min(data)
-    max_value = max(data)
-    bucket_count = len(data)
-    buckets = [[] for _ in range(bucket_count)]
-
-    for num in data:
-        index = int((num - min_value) * (bucket_count - 1) / (max_value - min_value))
-        buckets[index].append(num)
-
-    data.clear()
-    for bucket in buckets:
-        insertion_sort(bucket)
-        data.extend(bucket)
-    return data
 
 def load_data():
     with open('./data/data.csv', 'r') as data_file:
         reader = csv.reader(data_file)
         matrix = [row for row in reader]
-    print(matrix)
     return matrix
 
-load_data()
+def load_features():
+    with open('./data/features.csv', 'r') as data_file:
+        reader = csv.reader(data_file)
+        matrix = [row for row in reader]
+    return matrix
 
 def convert_to_data_type():
-    #data is all a list right now
-    #need to conver it to the correct data type based on the 0/1s in features csv file
+    features = load_features()
+    data = load_data()
+    converted_data = data.copy()
+    for j in range(0, len(features)):
+        if features[j][4] == '1':
+            pass
+            #TODO: Fix
+            #converted_data[j] = array(data[j])
+        elif features[j][5] == '1':
+            converted_data[j] = list(data[j])
+        elif features[j][6] == '1':
+            converted_data[j] = tuple(data[j])
+        elif features[j][7] == '1':
+            converted_data[j] = set(data[j])
+        elif features[j][8] == '1':
+            converted_data[j] = np.array(data[j])
+        elif features[j][9] == '1':
+            converted_data[j] = pd.Series(data[j])
+    print(type(converted_data[len(data) - 1]))
+    return converted_data
+
+convert_to_data_type()
+
+def time_sort():
     pass
 
 """
