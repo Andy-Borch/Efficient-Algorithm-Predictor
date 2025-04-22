@@ -8,6 +8,7 @@ import copy
 import matplotlib.pyplot as plt
 import os
 import seaborn as sns
+import csv
 
 lengths = [10, 100, 500]
 deviations = [10, 100, 500]
@@ -162,6 +163,21 @@ def bucket_sort(data):
         data.extend(bucket)
     return data
 
+def load_data():
+    with open('./data/data.csv', 'r') as data_file:
+        reader = csv.reader(data_file)
+        matrix = [row for row in reader]
+    print(matrix)
+    return matrix
+
+load_data()
+
+def convert_to_data_type():
+    #data is all a list right now
+    #need to conver it to the correct data type based on the 0/1s in features csv file
+    pass
+
+"""
 def generate_data():
     #This data will eventually come from the csv file, this is just proof of concept for now
 
@@ -190,6 +206,7 @@ def generate_data():
         'StandardDeviation': std_dev,
         'NumUniqueElements': num_unique_elements
     }
+
 
 def time_sort(algorithm_name, sort_func):
     base_data = generate_data()
@@ -330,3 +347,4 @@ print("-----THIS IS ONLY FOR PROOF OF CONCEPT. EACH SORTING FUNCTION IS BEING TE
 
 plot_sorting_times()
 print("Plotting completed.")
+"""
