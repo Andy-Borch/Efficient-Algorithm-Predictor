@@ -1,1 +1,1 @@
-size,mean,stddev,numunique,arrayvalue,listvalue,tuplevalue,setvalue,nparrayvalue,pandasseriesvalue,bubbletime,insertiontime,mergetime,quicktime,heaptime,radixtime,buckettime
+Size,Mean,StandardDeviation,NumUnique,arrayvalue,listvalue,tuplevalue,setvalue,nparrayvalue,BubbleSort,InsertionSort,MergeSort,QuickSort,HeaprSort,RadixSort,BucketSort
